@@ -1,0 +1,108 @@
+import pandas as pd
+import numpy as np
+from datetime import datetime, timedelta
+import os
+from pathlib import Path
+
+# Data file path
+DATA_FILE = Path("data/sales_data.csv")
+
+def generate_mock_data():
+    """
+    Generate mock sales data for demonstration purposes
+    
+    Returns:
+        pd.DataFrame: DataFrame containing mock sales data
+    """
+    np.random.seed(42)
+    date_today = datetime.now()
+    
+    # Generate dates for the past 30 days
+    dates = [date_today - timedelta(days=x) for x in range(30)]
+    dates = [date.strftime("%Y-%m-%d") for date in dates]
+    
+    # Generate sales reps
+    sales_reps = ["John Doe", "Jane Smith", "Bob Johnson", "Alice Brown", "Charlie Davis"]
+    
+    # Generate products
+    products = ["Product A", "Product B", "Product C", "Product D"]
+    
+    # Generate regions
+    regions = ["North", "South", "East", "West", "Central"]
+    
+    # Generate data
+    data = []
+    for _ in range(300):  # 300 sales records
+        date = np.random.choice(dates)
+        sales_rep = np.random.choice(sales_reps)
+        product = np.random.choice(products)
+        region = np.random.choice(regions)
+        units_sold = np.random.randint(1, 50)
+        revenue = units_sold * np.random.randint(100, 1000)
+        
+        data.append({
+            "date": date,
+            "sales_rep": sales_rep,
+            "product": product,
+            "region": region,
+            "units_sold": units_sold,
+            "revenue": revenue
+        })
+    
+    return pd.DataFrame(data)
+
+def save_data(df):
+    """
+    Save data to CSV file
+    
+    Args:
+        df (pd.DataFrame): DataFrame to save
+    """
+    # Create data directory if it doesn't exist
+    os.makedirs(os.path.dirname(DATA_FILE), exist_ok=True)
+    df.to_csv(DATA_FILE, index=False)
+
+def load_data():
+    """
+    Load sales data from CSV file or generate if not exists
+    
+    Returns:
+        pd.DataFrame: DataFrame containing sales data
+    """
+    if not DATA_FILE.exists():
+        df = generate_mock_data()
+        save_data(df)
+        return df
+    
+    return pd.read_csv(DATA_FILE)
+
+def get_filtered_data(data, filters=None):
+    """
+    Filter data based on provided filters
+    
+    Args:
+        data (pd.DataFrame): Data to filter
+        filters (dict): Dictionary of filters to apply
+    
+    Returns:
+        pd.DataFrame: Filtered DataFrame
+    """
+    if filters is None:
+        return data
+    
+    filtered_data = data.copy()
+    
+    if 'start_date' in filters and 'end_date' in filters:
+        filtered_data = filtered_data[(filtered_data['date'] >= filters['start_date']) & 
+                                     (filtered_data['date'] <= filters['end_date'])]
+    
+    if 'sales_rep' in filters and filters['sales_rep'] != 'All':
+        filtered_data = filtered_data[filtered_data['sales_rep'] == filters['sales_rep']]
+    
+    if 'product' in filters and filters['product'] != 'All':
+        filtered_data = filtered_data[filtered_data['product'] == filters['product']]
+    
+    if 'region' in filters and filters['region'] != 'All':
+        filtered_data = filtered_data[filtered_data['region'] == filters['region']]
+    
+    return filtered_data

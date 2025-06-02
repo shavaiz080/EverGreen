@@ -1,0 +1,28 @@
+import streamlit as st
+from admin_view import admin_view
+from sales_view import sales_rep_view
+from auth import logout_user
+
+# This file serves as a wrapper to import the specific view modules
+
+def router():
+    """Route users to the appropriate view based on their role"""
+    # Add a logout button in the sidebar
+    with st.sidebar:
+        st.write(f"Logged in as: **{st.session_state.display_name}**")
+        st.write(f"Role: **{st.session_state.role.capitalize()}**")
+        
+        if st.button("Logout"):
+            logout_user()
+            st.rerun()
+    
+    # Route to the appropriate view based on role
+    if st.session_state.role == "admin":
+        admin_view()
+    elif st.session_state.role == "sales":
+        sales_rep_view(st.session_state.username)
+    else:
+        st.error("Unknown role. Please contact administrator.")
+        if st.button("Logout", key="unknown_role_logout"):
+            logout_user()
+            st.rerun()

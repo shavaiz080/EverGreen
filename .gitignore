@@ -1,0 +1,24 @@
+# Environment variables
+.env
+
+# Firebase credentials
+firebase_credentials.json
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+venv/
+ENV/
+
+# Streamlit
+.streamlit/
+
+# IDE files
+.idea/
+.vscode/
+
+# OS specific
+.DS_Store
+Thumbs.db

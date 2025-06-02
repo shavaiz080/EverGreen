@@ -1,0 +1,98 @@
+import json
+import os
+import pandas as pd
+from datetime import datetime
+
+# Define file paths for data storage
+DATA_DIR = "data"
+LEADS_FILE = os.path.join(DATA_DIR, "leads.json")
+USERS_FILE = os.path.join(DATA_DIR, "users.json")
+
+# Ensure data directory exists
+if not os.path.exists(DATA_DIR):
+    os.makedirs(DATA_DIR)
+
+def save_leads(leads):
+    """Save leads to JSON file"""
+    with open(LEADS_FILE, 'w') as f:
+        json.dump(leads, f, indent=4)
+
+def load_leads():
+    """Load leads from JSON file or return default if file doesn't exist"""
+    if os.path.exists(LEADS_FILE):
+        with open(LEADS_FILE, 'r') as f:
+            return json.load(f)
+    return []
+
+def save_users(users):
+    """Save users to JSON file"""
+    with open(USERS_FILE, 'w') as f:
+        json.dump(users, f, indent=4)
+
+def load_users():
+    """Load users from JSON file or return default if file doesn't exist"""
+    if os.path.exists(USERS_FILE):
+        with open(USERS_FILE, 'r') as f:
+            return json.load(f)
+    
+    # Return default users if file doesn't exist
+    return [
+        {"id": 1, "username": "admin", "name": "Admin User", "email": "admin@example.com", 
+         "role": "admin", "status": "Active", "password": "admin123",
+         "last_login": datetime.now().strftime("%Y-%m-%d %H:%M")},
+        {"id": 2, "username": "sales1", "name": "John Doe", "email": "john@example.com", 
+         "role": "sales", "status": "Active", "password": "sales123",
+         "last_login": datetime.now().strftime("%Y-%m-%d %H:%M")},
+        {"id": 3, "username": "sales2", "name": "Jane Smith", "email": "jane@example.com", 
+         "role": "sales", "status": "Active", "password": "sales456",
+         "last_login": datetime.now().strftime("%Y-%m-%d %H:%M")},
+        {"id": 4, "username": "bob", "name": "Bob Johnson", "email": "bob@example.com", 
+         "role": "sales", "status": "Inactive", "password": "bob123",
+         "last_login": datetime.now().strftime("%Y-%m-%d %H:%M")},
+        {"id": 5, "username": "alice", "name": "Alice Brown", "email": "alice@example.com", 
+         "role": "sales", "status": "Active", "password": "alice123",
+         "last_login": datetime.now().strftime("%Y-%m-%d %H:%M")}
+    ]
+
+def get_next_lead_id():
+    """Get the next available lead ID"""
+    leads = load_leads()
+    if not leads:
+        return 1
+    return max(lead["id"] for lead in leads) + 1
+
+def update_user_last_login(username):
+    """Update the last login timestamp for a user"""
+    users = load_users()
+    for user in users:
+        # Case-insensitive comparison for username
+        if user["username"].lower() == username.lower():
+            user["last_login"] = datetime.now().strftime("%Y-%m-%d %H:%M")
+            break
+    save_users(users)
+
+def get_next_customer_code():
+    """Get the next available customer code in the format Evr001, Evr002, etc."""
+    leads = load_leads()
+    
+    if not leads:
+        return "Evr001"  # First customer code
+    
+    # Extract existing codes
+    existing_codes = []
+    for lead in leads:
+        if "customer_code" in lead and lead["customer_code"].startswith("Evr"):
+            try:
+                # Extract the numeric part
+                code_num = int(lead["customer_code"][3:])
+                existing_codes.append(code_num)
+            except ValueError:
+                # Skip if the format is not as expected
+                continue
+    
+    if not existing_codes:
+        return "Evr001"  # No valid codes found
+    
+    # Get the next number and format it
+    next_num = max(existing_codes) + 1
+    return f"Evr{next_num:03d}"  # Format with leading zeros

@@ -1,0 +1,42 @@
+[
+    {
+        "id": 1,
+        "username": "admin",
+        "name": "Admin User",
+        "email": "admin@example.com",
+        "role": "admin",
+        "status": "Active",
+        "password": "admin@123",
+        "last_login": "2025-06-02 15:57"
+    },
+    {
+        "id": 2,
+        "username": "Syed.Adeel",
+        "name": "Syed Adeel",
+        "email": "syed.adeel@evergreen.com",
+        "role": "sales",
+        "status": "Active",
+        "password": "adeel123",
+        "last_login": "2025-06-02 15:58"
+    },
+    {
+        "id": 3,
+        "username": "Saad.Saleem",
+        "name": "Saad Saleem",
+        "email": "saad.saleem@evergreen.com",
+        "role": "sales",
+        "status": "Active",
+        "password": "saad123",
+        "last_login": "2025-05-13 01:02"
+    },
+    {
+        "id": 4,
+        "username": "Abdullah",
+        "name": "Muhammad Abdullah",
+        "email": "abdullah@evergreen.com",
+        "role": "sales",
+        "status": "Active",
+        "password": "abdullah123",
+        "last_login": "2025-05-13 00:31"
+    }
+]
