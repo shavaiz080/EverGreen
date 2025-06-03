@@ -24,10 +24,6 @@ if 'next_lead_id' not in st.session_state:
 if 'form_submit_success' not in st.session_state:
     st.session_state.form_submit_success = False
 
-# Initialize notification state
-if 'notification' not in st.session_state:
-    st.session_state.notification = None
-    
 # Initialize users list if it doesn't exist
 if 'users' not in st.session_state:
     st.session_state.users = db.load_users()
