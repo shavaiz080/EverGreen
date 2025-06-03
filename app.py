@@ -29,6 +29,8 @@ def init_session_state():
         st.session_state.role = ""
     if 'display_name' not in st.session_state:
         st.session_state.display_name = ""
+    if 'notification' not in st.session_state:
+        st.session_state.notification = None
 
     # Always load fresh data from the database on app startup
     st.session_state.leads = db.load_leads()
